@@ -83,8 +83,7 @@ def tokenize_function(examples):
         examples["text"],
         padding=True,
         truncation=True,
-        max_length=256,  # Уменьшили для скорости
-        return_tensors="pt"
+        max_length=256,
     )
 
 
@@ -92,17 +91,19 @@ print("Токенизируем данные...")
 tokenized_datasets = dataset.map(tokenize_function, batched=True)
 
 # ==================== 5. ОБУЧЕНИЕ ====================
+# ИСПРАВЛЕННЫЕ TrainingArguments
 training_args = TrainingArguments(
     output_dir="./results",
-    evaluation_strategy="epoch",
+    eval_strategy="epoch",  # БЫЛО: evaluation_strategy
     learning_rate=2e-5,
     per_device_train_batch_size=2,
     per_device_eval_batch_size=2,
-    num_train_epochs=2,  # Уменьшили для скорости
+    num_train_epochs=2,
     weight_decay=0.01,
     logging_dir='./logs',
     logging_steps=5,
-    save_strategy="no",  # Отключаем сохранение для демо
+    save_strategy="no",
+    report_to=None,  # Отключаем отчеты
 )
 
 
